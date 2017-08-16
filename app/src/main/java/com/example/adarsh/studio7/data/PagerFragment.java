@@ -21,8 +21,6 @@ import com.example.adarsh.studio7.R;
 
 public class PagerFragment extends Fragment implements ActionBar.TabListener {
     private ViewPager viewPager;
-    private ViewPagerAdapter adapter;
-    private ActionBar actionBar;
     private String[] tabs = {"Songs", "Albums"};
 
     @Nullable
@@ -31,12 +29,12 @@ public class PagerFragment extends Fragment implements ActionBar.TabListener {
         View view = inflater.inflate(R.layout.pager_layout, container, false);
 
         this.viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        actionBar = getActivity().getActionBar();
-        this.adapter = new ViewPagerAdapter(getChildFragmentManager());
+        ActionBar actionBar = getActivity().getActionBar();
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
         this.viewPager.setAdapter(adapter);
 
-        if(actionBar!=null)
+        if(actionBar !=null)
         {
             actionBar.setHomeButtonEnabled(false);
             TabLayout tabs = (TabLayout) getActivity().findViewById(R.id.tabs);
@@ -49,6 +47,7 @@ public class PagerFragment extends Fragment implements ActionBar.TabListener {
     @Override
     public void onStart() {
         super.onStart();
+        getActivity().getActionBar().show();
     }
 
     @Override

@@ -71,11 +71,13 @@ class SongsAdapter extends RecyclerViewCursorAdapter<SongsAdapter.ViewHolder> {
         public void onClick(View v) {
             int pos = getAdapterPosition();
             Cursor c = getCursor();
+            PlayerControl.setSongList(c);
             c.moveToPosition(pos);
 
             Intent intent = new Intent(activity.getApplicationContext(), PlayScreen.class);
             intent.putExtra("NEW_SONG", true);
-            intent.putExtra("Song ID", c.getString(c.getColumnIndex(MediaStore.Audio.Media._ID)));
+            intent.putExtra("SONG_ID", c.getString(0));
+            intent.putExtra("POS", pos);
             activity.startActivity(intent);
         }
     }

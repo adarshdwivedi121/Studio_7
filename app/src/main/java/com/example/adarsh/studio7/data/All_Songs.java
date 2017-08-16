@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 
 import com.example.adarsh.studio7.*;
 
+import static com.example.adarsh.studio7.data.PlayerControl.projection;
+
 /**
  * Created by adarsh on 31/05/2017.
  */
@@ -58,15 +60,8 @@ public class All_Songs extends android.app.Fragment implements LoaderManager.Loa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.i("All Songs", "Inside Loader");
 
-        String[] projection = {
-                MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.ALBUM_ID,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.ALBUM
-        };
-
-        if (getArguments()!= null && getArguments().containsKey("ALBUM_ID"))
+        if (getArguments()!= null && getArguments().containsKey("ALBUM_ID")) {
+            getActivity().getActionBar().hide();
             return new CursorLoader(
                     this.getActivity().getApplicationContext(),
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -74,13 +69,16 @@ public class All_Songs extends android.app.Fragment implements LoaderManager.Loa
                     "album_id IS " + getArguments().getString("ALBUM_ID"),
                     null,
                     null);
-        else
+        }
+        else {
+            getActivity().getActionBar().show();
             return new CursorLoader(this.getActivity().getApplicationContext(),
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     projection,
                     MediaStore.Audio.Media.TITLE + " NOT LIKE 'AUD%' AND " + MediaStore.Audio.Media.DURATION + ">=60000 COLLATE NOCASE",
                     null,
                     MediaStore.Audio.Media.TITLE);
+        }
     }
 
     @Override
