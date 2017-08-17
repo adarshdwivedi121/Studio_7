@@ -15,19 +15,6 @@ public class PlayScreen extends AppCompatActivity {
 
         setActionBar((Toolbar) findViewById(R.id.player_toolbar));
 
-        findViewById(R.id.player_play_pause_button).setOnClickListener(new onClickListener());
-        findViewById(R.id.player_play_pause_button).setTag(Boolean.FALSE);
-        findViewById(R.id.player_previous_button).setOnClickListener(new onClickListener());
-        findViewById(R.id.player_next_button).setOnClickListener(new onClickListener());
-        findViewById(R.id.player_repeat_one_button).setOnClickListener(new onClickListener());
-        findViewById(R.id.player_shuffle_button).setOnClickListener(new onClickListener());
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-
         new PlayerControl(this, PlayerControl.SCREEN_PLAY);
 
         if(getIntent().hasExtra("NEW_SONG"))
@@ -37,6 +24,13 @@ public class PlayScreen extends AppCompatActivity {
 
         findViewById(R.id.player_toggle_queue).setOnClickListener(new onActionClickListener());
         findViewById(R.id.player_back_action).setOnClickListener(new onActionClickListener());
+
+        findViewById(R.id.player_play_pause_button).setOnClickListener(new onClickListener());
+        findViewById(R.id.player_play_pause_button).setTag(Boolean.FALSE);
+        findViewById(R.id.player_previous_button).setOnClickListener(new onClickListener());
+        findViewById(R.id.player_next_button).setOnClickListener(new onClickListener());
+        findViewById(R.id.player_repeat_one_button).setOnClickListener(new onClickListener());
+        findViewById(R.id.player_shuffle_button).setOnClickListener(new onClickListener());
     }
 
     private class onClickListener implements View.OnClickListener{
