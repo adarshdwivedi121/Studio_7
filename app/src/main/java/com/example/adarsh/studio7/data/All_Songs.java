@@ -62,6 +62,7 @@ public class All_Songs extends android.app.Fragment implements LoaderManager.Loa
 
         if (getArguments()!= null && getArguments().containsKey("ALBUM_ID")) {
             getActivity().getActionBar().hide();
+            cursorAdapter.setState(true, getArguments().getString("ALBUM_ID"));
             return new CursorLoader(
                     this.getActivity().getApplicationContext(),
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,

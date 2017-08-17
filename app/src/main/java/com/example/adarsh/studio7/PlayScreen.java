@@ -17,8 +17,10 @@ public class PlayScreen extends AppCompatActivity {
 
         new PlayerControl(this, PlayerControl.SCREEN_PLAY);
 
-        if(getIntent().hasExtra("NEW_SONG"))
+        if(getIntent().hasExtra("NEW_SONG")) {
+            PlayerControl.updateSongList(getIntent().getStringExtra("ID"));
             PlayerControl.setPos(getIntent().getIntExtra("POS", -1), getIntent().getStringExtra("SONG_ID"));
+        }
 
         PlayerControl.updateScreen();
 

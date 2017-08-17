@@ -7,12 +7,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -25,7 +21,7 @@ import com.example.adarsh.studio7.R;
  * Created by adarsh on 31/05/2017.
  */
 
-public class PlayerControl {
+public class PlayerControl{
     public static final int SCREEN_MAIN = 0;
     public static final int SCREEN_PLAY = 1;
 
@@ -92,8 +88,24 @@ public class PlayerControl {
         return !(mediaPlayer == null || !mediaPlayer.isPlaying());
     }
 
-    public static void setSongList(Cursor songList) {
-        PlayerControl.songList = songList;
+    public static void updateSongList(String Query){
+        Cursor c = null;
+        if (Query.compareTo("all") == 0)
+            c = parentActivity.getContentResolver().query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    PlayerControl.projection,
+                    MediaStore.Audio.Media.TITLE + " NOT LIKE 'AUD%' AND " + MediaStore.Audio.Media.DURATION + ">=60000 COLLATE NOCASE",
+                    null,
+                    MediaStore.Audio.Media.TITLE);
+        else
+            c = parentActivity.getContentResolver().query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    PlayerControl.projection,
+                    "album_id IS " + Query,
+                    null,
+                    null);
+        if(songList != null && !songList.isClosed())    songList.close();
+        songList = c;
     }
 
     private static void updateData() {

@@ -23,10 +23,17 @@ import com.example.adarsh.studio7.R;
 class SongsAdapter extends RecyclerViewCursorAdapter<SongsAdapter.ViewHolder> {
 
     private Activity activity;
+    private boolean state;
+    private String id;
 
     public SongsAdapter(Activity activity, Cursor cursor) {
         super(cursor);
         this.activity = activity;
+    }
+
+    public void setState(boolean st, String id){
+        this.state = st;
+        this.id = id;
     }
 
     @Override
@@ -71,11 +78,12 @@ class SongsAdapter extends RecyclerViewCursorAdapter<SongsAdapter.ViewHolder> {
         public void onClick(View v) {
             int pos = getAdapterPosition();
             Cursor c = getCursor();
-            PlayerControl.setSongList(c);
             c.moveToPosition(pos);
 
             Intent intent = new Intent(activity.getApplicationContext(), PlayScreen.class);
             intent.putExtra("NEW_SONG", true);
+            if(state)   intent.putExtra("ID", id);
+            else    intent.putExtra("ID", "all");
             intent.putExtra("SONG_ID", c.getString(0));
             intent.putExtra("POS", pos);
             activity.startActivity(intent);
