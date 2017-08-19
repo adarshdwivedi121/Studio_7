@@ -128,7 +128,7 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
                     break;
 
                 case R.id.main_screen_next_button:
-                    PlayerControl.playNext();
+                    PlayerControl.playNext(true);
                     break;
             }
         }

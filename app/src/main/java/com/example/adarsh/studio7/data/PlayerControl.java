@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.example.adarsh.studio7.R;
 
+import java.util.Random;
+
 /**
  * Created by adarsh on 31/05/2017.
  */
@@ -23,6 +25,10 @@ import com.example.adarsh.studio7.R;
 public class PlayerControl{
     public static final int SCREEN_MAIN = 0;
     public static final int SCREEN_PLAY = 1;
+
+    public static final int REPEAT_OFF = 0;
+    public static final int REPEAT_ALL = 1;
+    public static final int REPEAT_ONE = 2;
 
     public static final String[] projection = {
             MediaStore.Audio.Media._ID,
@@ -40,6 +46,7 @@ public class PlayerControl{
     private static Handler seekHandler = new Handler();
 
     private static int SCREEN = SCREEN_MAIN;
+    private static int REPEAT_STATUS = REPEAT_OFF;
 
     private static Cursor songList;
     private static int pos = -1;
@@ -49,6 +56,7 @@ public class PlayerControl{
     private static String songName = null;
     private static String albumName = null;
     private static String artistName = null;
+    private static boolean shuffle = false;
 
     public static void setPos(int pos, String song_id) {
         if (PlayerControl.pos == -1 || music.compareTo(song_id) != 0) {
@@ -243,37 +251,73 @@ public class PlayerControl{
 
     public static void stop() {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
             mediaPlayer.seekTo(0);
+            mediaPlayer.pause();
         }
     }
 
-    public static void playNext() {
+    public static void playNext(boolean stat) {
         stop();
-        if (pos == songList.getCount() - 1)
-            pos = 0;
-        else
-            pos++;
+
+        if(shuffleStatus()){
+            randomPos();
+        }
+        else {
+            if (pos == songList.getCount() - 1)
+                pos = 0;
+            else
+                pos++;
+        }
 
         updateData();
-        play();
+        if(stat)    play();
         updateScreen();
     }
 
     public static void playPrevious() {
         stop();
-        if (pos == 0)
-            pos = songList.getCount() - 1;
-        else
-            pos--;
+        if(shuffleStatus()){
+            randomPos();
+        }
+        else{
+            if (pos == 0)
+                pos = songList.getCount() - 1;
+            else
+                pos--;
+        }
 
         updateData();
         play();
         updateScreen();
     }
 
-    public static boolean isListLoop() {
-        return listLoop;
+    public static void setShuffle(boolean b) {
+        shuffle = b;
+    }
+
+    public static boolean shuffleStatus(){
+        return shuffle;
+    }
+
+    public static void randomPos() {
+        Random r = new Random();
+        int p = r.nextInt(songList.getCount());
+        while(p == pos)
+            p = r.nextInt(songList.getCount());
+        pos = p;
+        updateData();
+    }
+
+    public static void setListLoop(boolean listLoop) {
+        PlayerControl.listLoop = listLoop;
+    }
+
+    public static int repeatStatus() {
+        return REPEAT_STATUS;
+    }
+
+    public static void setRepeatStatus(int state){
+        REPEAT_STATUS = state;
     }
 }
 
@@ -281,16 +325,23 @@ class MediaCompletionListener implements MediaPlayer.OnCompletionListener {
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if (mp.isLooping()) {
-            PlayerControl.stop();
+        PlayerControl.stop();
+        if(PlayerControl.shuffleStatus()) {
+            PlayerControl.randomPos();
             PlayerControl.play();
-        } else if (PlayerControl.isListLoop()) {
-            PlayerControl.stop();
-            PlayerControl.playNext();
-        } else {
-            PlayerControl.stop();
-            PlayerControl.playNext();
-            PlayerControl.updatePlayPauseIcon();
         }
+        else{
+            switch(PlayerControl.repeatStatus()){
+                case PlayerControl.REPEAT_ALL:
+                    PlayerControl.playNext(true);
+                    break;
+                case PlayerControl.REPEAT_ONE:
+                    PlayerControl.play();
+                    break;
+                case PlayerControl.REPEAT_OFF:
+                    PlayerControl.playNext(false);
+            }
+        }
+        PlayerControl.updatePlayPauseIcon();
     }
 }

@@ -206,14 +206,14 @@
                 android:src="@drawable/ic_next" />
 
             <ImageButton
-                android:id="@+id/player_repeat_one_button"
+                android:id="@+id/player_repeat_button"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/ripple_oval"
-                android:src="@drawable/ic_repeat_one" />
+                android:src="@drawable/ic_repeat_all" />
 
         </RelativeLayout>
     </LinearLayout>
