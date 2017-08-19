@@ -95,15 +95,15 @@
                  android:background="@android:color/black"
                  android:id="@+id/main_screen_player_controls"
                  android:layout_width="match_parent"
-                 android:layout_height="0dp"
+                 android:layout_height="64dp"
                  android:layout_alignParentBottom="true"
                  android:padding="8dp"
-                 android:layout_weight="1.25"
                  android:elevation="16dp"
                  android:visibility="gone">
 
                  <ImageView
                      android:id="@+id/main_screen_album_art"
+                     android:transitionName="album_art"
                      android:layout_width="64dp"
                      android:layout_height="64dp"
                      android:layout_marginRight="16dp"/>
@@ -120,6 +120,7 @@
 
                  <ImageButton
                      android:id="@+id/main_screen_previous_button"
+                     android:transitionName="prev_button"
                      android:layout_width="48dp"
                      android:layout_height="48dp"
                      android:layout_centerVertical="true"
@@ -129,6 +130,7 @@
 
                  <ImageButton
                      android:id="@+id/main_screen_play_pause_button"
+                     android:transitionName="play_button"
                      android:layout_width="48dp"
                      android:layout_height="48dp"
                      android:layout_toLeftOf="@+id/main_screen_next_button"
@@ -138,6 +140,7 @@
 
                  <ImageButton
                      android:id="@+id/main_screen_next_button"
+                     android:transitionName="next_button"
                      android:layout_width="48dp"
                      android:layout_height="48dp"
                      android:layout_centerVertical="true"

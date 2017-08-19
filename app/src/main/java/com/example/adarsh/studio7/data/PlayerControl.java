@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -58,6 +57,10 @@ public class PlayerControl{
             updateData();
             play();
         }
+    }
+
+    public static Cursor getSongList(){
+        return songList;
     }
 
     private static Runnable run = () -> {
@@ -148,27 +151,26 @@ public class PlayerControl{
             ((TextView) parentActivity.findViewById(R.id.main_screen_song_title)).setText(songName);
         } else if (SCREEN == SCREEN_PLAY) {
             progressBar.setMax(mediaPlayer.getDuration());
-            FrameLayout fl = (FrameLayout) parentActivity.findViewById(R.id.seek_listener);
+
             final int[] x = new int[1];
             final int[] y = new int[1];
 
             Rect r= new Rect();
-            fl.getViewTreeObserver().addOnGlobalLayoutListener(
+            progressBar.getViewTreeObserver().addOnGlobalLayoutListener(
                     new ViewTreeObserver.OnGlobalLayoutListener() {
                         public void onGlobalLayout() {
                             //Remove the listener before proceeding
-                            fl.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            progressBar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                             // measure your views here
-                            fl.getGlobalVisibleRect(r);
+                            progressBar.getGlobalVisibleRect(r);
                             x[0] = (r.left + r.right) / 2;
                             y[0] = (r.top + r.bottom) / 2;
                         }
                     }
             );
 
-
-            fl.setOnTouchListener((v, event) -> {
+            progressBar.setOnTouchListener((v, event) -> {
                 int x1 = (int) event.getRawX();
                 int y1 = (int) event.getRawY();
 
@@ -241,7 +243,8 @@ public class PlayerControl{
 
     public static void stop() {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
+            mediaPlayer.pause();
+            mediaPlayer.seekTo(0);
         }
     }
 

@@ -1,13 +1,24 @@
 package com.example.adarsh.studio7;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toolbar;
 
 import com.example.adarsh.studio7.data.PlayerControl;
+import com.example.adarsh.studio7.data.Song_Queue;
 
 public class PlayScreen extends AppCompatActivity {
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        findViewById(R.id.player_screen_container).setTag(Boolean.FALSE);
+        getFragmentManager().popBackStack();
+        findViewById(R.id.player_stats).setVisibility(View.VISIBLE);
+        PlayerControl.updateScreen();
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +35,7 @@ public class PlayScreen extends AppCompatActivity {
 
         PlayerControl.updateScreen();
 
+        findViewById(R.id.player_screen_container).setTag(Boolean.FALSE);
         findViewById(R.id.player_toggle_queue).setOnClickListener(new onActionClickListener());
         findViewById(R.id.player_back_action).setOnClickListener(new onActionClickListener());
 
@@ -72,17 +84,28 @@ public class PlayScreen extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.player_back_action:
-                        finish();
+                    finishAfterTransition();
                     break;
                 case R.id.player_toggle_queue:
-//                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-//                    ft.replace(R.id.fragment_container, new AllSongs());
-//                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                    ft.addToBackStack("Song Queue");
-//                    ft.commit();
+                    if(!(Boolean)findViewById(R.id.player_screen_container).getTag()) {
+                        findViewById(R.id.player_screen_container).setTag(Boolean.TRUE);
+                        findViewById(R.id.player_stats).setVisibility(View.GONE);
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.setCustomAnimations(R.animator.slide_left, android.R.animator.fade_out, android.R.animator.fade_in, R.animator.slide_right);
+                        ft.addToBackStack("");
+                        ft.add(R.id.player_screen_container, new Song_Queue());
+                        ft.commit();
+                    }
+                    else{
+                        findViewById(R.id.player_screen_container).setTag(Boolean.FALSE);
+                        getFragmentManager().popBackStack();
+                        findViewById(R.id.player_stats).setVisibility(View.VISIBLE);
+                        PlayerControl.updateScreen();
+                    }
                     break;
 
             }
         }
     }
 }
+

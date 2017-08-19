@@ -55,8 +55,8 @@ public class CardAdapter extends RecyclerViewCursorAdapter<CardAdapter.ViewHolde
 
             FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
             ft.addToBackStack(null);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.replace(R.id.fragment_container, all_songs);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 //            c.close();
             ft.commit();
         }

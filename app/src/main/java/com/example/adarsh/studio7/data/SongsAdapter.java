@@ -3,7 +3,11 @@ package com.example.adarsh.studio7.data;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +29,7 @@ class SongsAdapter extends RecyclerViewCursorAdapter<SongsAdapter.ViewHolder> {
     private Activity activity;
     private boolean state;
     private String id;
+    private boolean listenerOption;
 
     public SongsAdapter(Activity activity, Cursor cursor) {
         super(cursor);
@@ -34,6 +39,10 @@ class SongsAdapter extends RecyclerViewCursorAdapter<SongsAdapter.ViewHolder> {
     public void setState(boolean st, String id){
         this.state = st;
         this.id = id;
+    }
+
+    public void setListenerOption(boolean option){
+        listenerOption = option;
     }
 
     @Override
@@ -80,13 +89,24 @@ class SongsAdapter extends RecyclerViewCursorAdapter<SongsAdapter.ViewHolder> {
             Cursor c = getCursor();
             c.moveToPosition(pos);
 
-            Intent intent = new Intent(activity.getApplicationContext(), PlayScreen.class);
-            intent.putExtra("NEW_SONG", true);
-            if(state)   intent.putExtra("ID", id);
-            else    intent.putExtra("ID", "all");
-            intent.putExtra("SONG_ID", c.getString(0));
-            intent.putExtra("POS", pos);
-            activity.startActivity(intent);
+            if(!listenerOption) {
+                Intent intent = new Intent(activity.getApplicationContext(), PlayScreen.class);
+                intent.putExtra("NEW_SONG", true);
+                if (state) intent.putExtra("ID", id);
+                else intent.putExtra("ID", "all");
+                intent.putExtra("SONG_ID", c.getString(0));
+                intent.putExtra("POS", pos);
+                Pair<View, String> p1 = Pair.create(activity.findViewById(R.id.main_screen_previous_button), "prev_button");
+                Pair<View, String> p2 = Pair.create(activity.findViewById(R.id.main_screen_play_pause_button), "play_button");
+                Pair<View, String> p3 = Pair.create(activity.findViewById(R.id.main_screen_next_button), "next_button");
+                Pair<View, String> p4 = Pair.create(activity.findViewById(R.id.main_screen_album_art), "album_art");
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, p1, p2, p3, p4);
+                ActivityCompat.startActivity(activity, intent, options.toBundle());
+            }
+            else{
+                PlayerControl.setPos(pos, c.getString(0));
+                PlayerControl.updatePlayPauseIcon();
+            }
         }
     }
 }
