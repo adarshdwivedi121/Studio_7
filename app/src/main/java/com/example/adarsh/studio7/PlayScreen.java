@@ -71,19 +71,25 @@ public class PlayScreen extends AppCompatActivity {
 
             switch (v.getId()){
                 case R.id.player_play_pause_button:
-                    if(v.findViewById(R.id.player_play_pause_button).getTag() == Boolean.FALSE && !PlayerControl.isPlaying())
+                    if(v.findViewById(R.id.player_play_pause_button).getTag() == Boolean.FALSE && !PlayerControl.isPlaying()) {
+                        MainScreen.requestAudioFocus();
                         PlayerControl.play();
-                    else
+                    }
+                    else {
+                        MainScreen.abandonAudioFocus();
                         PlayerControl.pause();
+                    }
 
                     PlayerControl.updatePlayPauseIcon();
                     break;
 
                 case R.id.player_previous_button:
+                    MainScreen.requestAudioFocus();
                     PlayerControl.playPrevious();
                     break;
 
                 case R.id.player_next_button:
+                    MainScreen.requestAudioFocus();
                     PlayerControl.playNext(true);
                     break;
 

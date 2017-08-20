@@ -66,6 +66,7 @@ class SongsAdapter extends RecyclerViewCursorAdapter<SongsAdapter.ViewHolder> {
             Log.i("cursor", String.valueOf(c));
             Log.i("ALBUM_CURSOR", String.valueOf(cursor.getPosition()));
             c.moveToNext();
+            holder.albumArt.setBackgroundColor(Color.BLACK);
             new ImageLoader(holder.albumArt, c).execute();
         }
     }

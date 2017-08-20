@@ -9,11 +9,13 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.adarsh.studio7.MainScreen;
 import com.example.adarsh.studio7.R;
 
 import java.util.Random;
@@ -318,6 +320,28 @@ public class PlayerControl{
 
     public static void setRepeatStatus(int state){
         REPEAT_STATUS = state;
+    }
+
+    public static int getPos() {
+        return pos;
+    }
+
+    public static void lastSongList(String prev_list, int p) {
+
+        if(!prev_list.isEmpty()){
+            Cursor c = parentActivity.getContentResolver().query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    PlayerControl.projection,
+                    "_id IN " + prev_list,
+                    null,
+                    null);
+            if(songList != null && !songList.isClosed())    songList.close();
+            songList = c;
+            pos = p;
+            Log.e("Query", prev_list);
+            Log.e("Last Played List", "Length : " + String.valueOf(songList.getCount()) + " Cols : " + String.valueOf(songList.getColumnCount()));
+            updateData();
+        }
     }
 }
 
