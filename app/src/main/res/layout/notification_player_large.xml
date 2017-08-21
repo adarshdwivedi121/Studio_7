@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:orientation="vertical"
+    android:background="@android:color/darker_gray">
+
+    <ImageView
+        android:src="@drawable/default_music"
+        android:id="@+id/large_notification_album_art"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:background="@android:color/black"
+        android:alpha="0.3"/>
+
+    <LinearLayout
+        android:layout_above="@+id/large_notification_player_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:text="Yeh Zindagi Hai"
+            android:id="@+id/large_notification_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large.Inverse"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"/>
+
+        <TextView
+            android:text="The Local Train"
+            android:id="@+id/large_notification_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"/>
+
+        <TextView
+            android:text="Aalas Ka Pedh"
+            android:id="@+id/large_notification_album"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/large_notification_player_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:weightSum="3">
+
+        <ImageView
+            android:id="@+id/large_notification_previous_button"
+            android:transitionName="prev_button"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ripple_oval"
+            android:src="@drawable/ic_previous"
+            android:clickable="true"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/large_notification_play_pause_button"
+            android:transitionName="play_button"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ripple_oval"
+            android:src="@drawable/ic_play"
+            android:clickable="true"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/large_notification_next_button"
+            android:transitionName="next_button"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ripple_oval"
+            android:src="@drawable/ic_next"
+            android:clickable="true"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

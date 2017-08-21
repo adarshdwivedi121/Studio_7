@@ -106,7 +106,8 @@ class SongsAdapter extends RecyclerViewCursorAdapter<SongsAdapter.ViewHolder> {
             }
             else{
                 PlayerControl.setPos(pos, c.getString(0));
-                PlayerControl.updatePlayPauseIcon();
+                PlayerControl.updateScreen();
+                PlayerControl.updateNotification_Icons();
             }
         }
     }

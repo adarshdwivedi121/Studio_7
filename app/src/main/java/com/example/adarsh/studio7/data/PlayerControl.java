@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.example.adarsh.studio7.MainScreen;
@@ -213,10 +214,11 @@ public class PlayerControl{
             ((ImageView) parentActivity.findViewById(R.id.player_screen_background)).setImageBitmap(bitmap);
             run.run();
         }
-        updatePlayPauseIcon();
+        updateNotification_Icons();
     }
 
-    public static void updatePlayPauseIcon() {
+    public static void updateNotification_Icons() {
+        MainScreen.setUpNotification(parentActivity.getApplicationContext());
         if (SCREEN == SCREEN_MAIN) {
             if (isPlaying()) {
                 ((ImageView) parentActivity.findViewById(R.id.main_screen_play_pause_button)).setImageResource(R.drawable.ic_pause);
@@ -258,7 +260,7 @@ public class PlayerControl{
         }
     }
 
-    public static void playNext(boolean stat) {
+    public static void playNext(boolean stat, int p) {
         stop();
 
         if(shuffleStatus()){
@@ -272,7 +274,7 @@ public class PlayerControl{
         }
 
         updateData();
-        if(stat)    play();
+        if(stat || p < songList.getCount() - 1)    play();
         updateScreen();
     }
 
@@ -334,7 +336,7 @@ public class PlayerControl{
                     PlayerControl.projection,
                     "_id IN " + prev_list,
                     null,
-                    null);
+                    MediaStore.Audio.Media.TITLE);
             if(songList != null && !songList.isClosed())    songList.close();
             songList = c;
             pos = p;
@@ -342,6 +344,34 @@ public class PlayerControl{
             Log.e("Last Played List", "Length : " + String.valueOf(songList.getCount()) + " Cols : " + String.valueOf(songList.getColumnCount()));
             updateData();
         }
+    }
+
+    public static RemoteViews setUpNotification(RemoteViews view) {
+        view.setImageViewBitmap(R.id.notification_album_art, albumArt);
+        view.setTextViewText(R.id.notification_song_title, songName);
+        if(isPlaying())
+            view.setImageViewResource(R.id.notification_play_pause_button, R.drawable.ic_pause);
+        else
+            view.setImageViewResource(R.id.notification_play_pause_button, R.drawable.ic_play);
+
+        return view;
+    }
+
+    public static void playSong(String id) {
+        PlayerControl.stop();
+        Cursor c = parentActivity.getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                PlayerControl.projection,
+                "_id IS " + id,
+                null,
+                null);
+
+        if(songList != null && !songList.isClosed())    songList.close();
+            songList = c;
+        pos = 0;
+        updateData();
+        play();
+        updateScreen();
     }
 }
 
@@ -357,15 +387,15 @@ class MediaCompletionListener implements MediaPlayer.OnCompletionListener {
         else{
             switch(PlayerControl.repeatStatus()){
                 case PlayerControl.REPEAT_ALL:
-                    PlayerControl.playNext(true);
+                    PlayerControl.playNext(true, PlayerControl.getPos());
                     break;
                 case PlayerControl.REPEAT_ONE:
                     PlayerControl.play();
                     break;
                 case PlayerControl.REPEAT_OFF:
-                    PlayerControl.playNext(false);
+                    PlayerControl.playNext(false, PlayerControl.getPos());
             }
         }
-        PlayerControl.updatePlayPauseIcon();
+        PlayerControl.updateNotification_Icons();
     }
 }

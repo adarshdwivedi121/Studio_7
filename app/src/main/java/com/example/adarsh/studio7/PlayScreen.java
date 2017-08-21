@@ -2,10 +2,8 @@ package com.example.adarsh.studio7;
 
 import android.app.FragmentTransaction;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toolbar;
@@ -80,7 +78,7 @@ public class PlayScreen extends AppCompatActivity {
                         PlayerControl.pause();
                     }
 
-                    PlayerControl.updatePlayPauseIcon();
+                    PlayerControl.updateNotification_Icons();
                     break;
 
                 case R.id.player_previous_button:
@@ -90,7 +88,7 @@ public class PlayScreen extends AppCompatActivity {
 
                 case R.id.player_next_button:
                     MainScreen.requestAudioFocus();
-                    PlayerControl.playNext(true);
+                    PlayerControl.playNext(true, PlayerControl.getPos());
                     break;
 
                 case R.id.player_shuffle_button:

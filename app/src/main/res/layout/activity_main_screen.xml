@@ -36,7 +36,7 @@
          android:layout_width="match_parent"
          android:layout_height="match_parent"
          android:layout_alignParentTop="true"
-         android:layout_toEndOf="@+id/empty_view">
+         android:layout_alignParentStart="true">
 
         <ImageView
             android:id="@+id/main_screen_background"
@@ -58,7 +58,7 @@
 
                  <android.widget.Toolbar
                      android:id="@+id/toolbar"
-                     android:layout_width="400dp"
+                     android:layout_width="match_parent"
                      android:layout_height="wrap_content"
                      android:background="@android:color/transparent"
                      app:layout_scrollFlags="scroll|enterAlways|snap"
@@ -69,10 +69,19 @@
                          android:layout_height="match_parent"
                          android:orientation="vertical">
 
-                         <android.support.v7.widget.SearchView
+                         <FrameLayout
                              android:layout_width="match_parent"
-                             android:layout_height="wrap_content"
-                             android:gravity="right" />
+                             android:layout_height="48dp">
+                             <ImageButton
+                                 android:id="@+id/main_screen_search"
+                                 android:transitionName="search_widget"
+                                 android:layout_width="48dp"
+                                 android:layout_height="48dp"
+                                 android:src="@drawable/ic_search"
+                                 android:tint="@android:color/white"
+                                 android:background="@drawable/ripple_oval"
+                                 android:layout_gravity="center_vertical|end"/>
+                         </FrameLayout>
 
                          <android.support.design.widget.TabLayout
                              android:id="@+id/tabs"
