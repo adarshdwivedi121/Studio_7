@@ -22,12 +22,10 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.example.adarsh.studio7.data.NotificationReceiver;
 import com.example.adarsh.studio7.data.PagerFragment;
 import com.example.adarsh.studio7.data.PlayerControl;
 
@@ -42,12 +40,10 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
     private static AudioManager audioManager;
     private static OnAudioChangeListener audioChangeListener = new OnAudioChangeListener();
     private static int focus = 0;
-    private static HeadsetReceiver headsetReceiver;
+    private static NotificationReceiver notificationReceiver;
     private SharedPreferences pref;
 
-    private static RemoteViews view;
     private static NotificationManager notificationManager;
-    private static NotificationCompat.Builder notification;
 
     protected boolean shouldAskPermissions() {
         return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
@@ -84,7 +80,6 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(headsetReceiver);
     }
 
     public static void requestAudioFocus(){
@@ -122,7 +117,7 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
 
         Log.i("FOCUS", String.valueOf(focus));
 
-        headsetReceiver = new HeadsetReceiver();
+        HeadsetReceiver headsetReceiver = new HeadsetReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         registerReceiver(headsetReceiver, intentFilter);
@@ -164,7 +159,7 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
     }
 
     public static void setUpNotification(Context context){
-        view = new RemoteViews(context.getPackageName(), R.layout.notification_player);
+        RemoteViews view = new RemoteViews(context.getPackageName(), R.layout.notification_player);
         view = PlayerControl.setUpNotification(view);
 
         Intent intent = new Intent(context, PlayScreen.class);
@@ -182,6 +177,9 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
         PendingIntent previous = PendingIntent.getBroadcast(context, 1001, new Intent("PREVIOUS"), PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent next = PendingIntent.getBroadcast(context, 1001, new Intent("NEXT"), PendingIntent.FLAG_UPDATE_CURRENT);
 
+        view.setOnClickPendingIntent(R.id.notification_previous_button, previous);
+        view.setOnClickPendingIntent(R.id.notification_play_pause_button, play_pause);
+        view.setOnClickPendingIntent(R.id.notification_next_button, next);
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(context).
                 setContent(view).
@@ -199,17 +197,14 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
         return focus == 1;
     }
 
-    private class NotificationReceiver extends BroadcastReceiver {
+    private class HeadsetReceiver extends BroadcastReceiver {
+
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().compareTo("PLAY") == 0)
-                PlayerControl.play();
-            else if(intent.getAction().compareTo("PAUSE") == 0)
+            if(intent.getAction().compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0)
                 PlayerControl.pause();
-            else if(intent.getAction().compareTo("PREVIOUS") == 0)
-                PlayerControl.playPrevious();
-            else if(intent.getAction().compareTo("NEXT") == 0)
-                PlayerControl.playNext(true, PlayerControl.getPos());
+
+            PlayerControl.updateNotification_Icons();
         }
     }
 
@@ -220,17 +215,6 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
             if(MainScreen.askedFocus() && focusChange == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
                 PlayerControl.play();
             else
-                PlayerControl.pause();
-
-            PlayerControl.updateNotification_Icons();
-        }
-    }
-
-    private class HeadsetReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0)
                 PlayerControl.pause();
 
             PlayerControl.updateNotification_Icons();
@@ -267,7 +251,6 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
                 case R.id.main_screen_search:
                     Log.e("Search", "Inside Listener");
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.addSharedElement(findViewById(R.id.main_screen_search), "search_widget");
                     ft.addToBackStack("Main_Screen");
                     ft.replace(R.id.fragment_container, new SearchFragment());
                     ft.commit();

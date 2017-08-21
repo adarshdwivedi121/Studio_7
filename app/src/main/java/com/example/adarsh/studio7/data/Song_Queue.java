@@ -1,7 +1,6 @@
 package com.example.adarsh.studio7.data;
 
 import android.app.Fragment;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
