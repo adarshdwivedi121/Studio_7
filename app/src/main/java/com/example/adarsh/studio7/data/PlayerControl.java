@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
+import com.example.adarsh.studio7.CustomViews.SeekBar;
 import com.example.adarsh.studio7.MainScreen;
 import com.example.adarsh.studio7.R;
 
@@ -46,7 +47,7 @@ public class PlayerControl{
     private static MediaPlayer mediaPlayer = null;
     private static Activity parentActivity = null;
     private static String music = null;
-    private static ProgressBar progressBar;
+    private static SeekBar progressBar;
     private static Handler seekHandler = new Handler();
 
     private static int SCREEN = SCREEN_MAIN;
@@ -91,7 +92,7 @@ public class PlayerControl{
     public PlayerControl(Activity activity, int screen) {
         parentActivity = activity;
         SCREEN = screen;
-        progressBar = (ProgressBar) parentActivity.findViewById(R.id.progressBar);
+        progressBar = (SeekBar) parentActivity.findViewById(R.id.progressBar);
     }
 
     public static void repeat(Boolean req) {
@@ -144,12 +145,8 @@ public class PlayerControl{
                 null
         );
         c.moveToNext();
-        Bitmap bitmap = null;
-
-        if (c != null) {
-            bitmap = BitmapFactory.decodeFile(c.getString(1));
-            c.close();
-        }
+        Bitmap bitmap = BitmapFactory.decodeFile(c.getString(1));
+        c.close();
 
         if (bitmap == null)
             bitmap = BitmapFactory.decodeResource(parentActivity.getResources(), R.drawable.default_music);

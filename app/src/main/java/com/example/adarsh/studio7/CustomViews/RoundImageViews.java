@@ -24,6 +24,14 @@ public class RoundImageViews extends android.support.v7.widget.AppCompatImageVie
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        int val = widthMeasureSpec > heightMeasureSpec ? heightMeasureSpec : widthMeasureSpec;
+        setMeasuredDimension(val, val);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
 
         Drawable drawable = getDrawable();

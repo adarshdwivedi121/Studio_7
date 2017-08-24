@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toolbar;
 
@@ -13,11 +14,13 @@ import com.example.adarsh.studio7.data.Song_Queue;
 
 public class PlayScreen extends AppCompatActivity {
 
+    private FrameLayout frame;
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        findViewById(R.id.player_screen_container).setTag(Boolean.FALSE);
         getFragmentManager().popBackStack();
+        frame.setTag(Boolean.FALSE);
         findViewById(R.id.player_stats).setVisibility(View.VISIBLE);
         PlayerControl.updateScreen();
     }
@@ -27,6 +30,8 @@ public class PlayScreen extends AppCompatActivity {
         setContentView(R.layout.activity_player_screen);
 
         setActionBar((Toolbar) findViewById(R.id.player_toolbar));
+
+        frame = (FrameLayout) findViewById(R.id.player_screen_container);
 
         new PlayerControl(this, PlayerControl.SCREEN_PLAY);
 
@@ -153,8 +158,8 @@ public class PlayScreen extends AppCompatActivity {
                         ft.commit();
                     }
                     else{
-                        findViewById(R.id.player_screen_container).setTag(Boolean.FALSE);
                         getFragmentManager().popBackStack();
+                        frame.setTag(Boolean.FALSE);
                         findViewById(R.id.player_stats).setVisibility(View.VISIBLE);
                         PlayerControl.updateScreen();
                     }

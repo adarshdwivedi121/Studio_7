@@ -25,7 +25,6 @@
             android:id="@+id/large_notification_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textAllCaps="true"
             android:singleLine="true"
@@ -35,7 +34,8 @@
             android:id="@+id/large_notification_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
             android:textAllCaps="true"
             android:singleLine="true"
             android:textColor="@android:color/white"/>

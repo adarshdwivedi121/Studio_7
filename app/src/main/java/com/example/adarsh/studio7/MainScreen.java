@@ -40,7 +40,6 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
     private static AudioManager audioManager;
     private static OnAudioChangeListener audioChangeListener = new OnAudioChangeListener();
     private static int focus = 0;
-    private static NotificationReceiver notificationReceiver;
     private SharedPreferences pref;
 
     private HeadsetReceiver headsetReceiver;

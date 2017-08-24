@@ -66,46 +66,51 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="8.55">
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/player_stats"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clickable="true">
+                android:orientation="vertical">
 
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="340dp"
-                    android:layout_height="340dp"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/circle_shape"
-                    android:clickable="false"
-                    android:indeterminate="false"
-                    android:progressDrawable="@drawable/circular" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="8"
+                    android:layout_gravity="center_horizontal">
+                    <com.example.adarsh.studio7.CustomViews.SeekBar
+                        android:id="@+id/progressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/circle_shape"
+                        android:clickable="false"
+                        android:indeterminate="false"
+                        android:progressDrawable="@drawable/circular" />
 
-                <com.example.adarsh.studio7.CustomViews.RoundImageViews
-                    android:id="@+id/player_album_art"
-                    android:transitionName="album_art"
-                    android:layout_width="280dp"
-                    android:layout_height="280dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_alignTop="@id/progressBar"
-                    android:layout_marginTop="30dp"
-                    android:background="@drawable/default_music"
-                    android:clickable="false"
-                    android:scaleType="fitCenter"/>
+                    <com.example.adarsh.studio7.CustomViews.RoundImageViews
+                        android:id="@+id/player_album_art"
+                        android:transitionName="album_art"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="30dp"
+                        android:background="@drawable/default_music"
+                        android:clickable="false"
+                        android:scaleType="fitCenter"/>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/player_song_details"
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
+                    android:layout_height="0dp"
                     android:layout_gravity="bottom"
-                    android:layout_below="@id/progressBar"
                     android:layout_marginBottom="32dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginTop="16dp"
                     android:gravity="center"
+                    android:layout_weight="2"
                     android:orientation="vertical">
 
                     <TextView
@@ -152,10 +157,8 @@
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="@android:color/white" />
                 </LinearLayout>
-
-            </RelativeLayout>
+            </LinearLayout>
         </FrameLayout>
-
         <RelativeLayout
             android:id="@+id/player_player_controls"
             android:layout_width="match_parent"
