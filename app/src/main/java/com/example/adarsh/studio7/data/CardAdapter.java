@@ -3,6 +3,7 @@ package com.example.adarsh.studio7.data;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
@@ -22,10 +23,12 @@ import com.example.adarsh.studio7.R;
 public class CardAdapter extends RecyclerViewCursorAdapter<CardAdapter.ViewHolder> {
 
     private Activity activity;
+    private String CALLING_TAB;
 
-    public CardAdapter(Activity activity, Cursor cursor) {
+    public CardAdapter(Activity activity, Cursor cursor, String tab) {
         super(cursor);
         this.activity = activity;
+        this.CALLING_TAB = tab;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -49,7 +52,13 @@ public class CardAdapter extends RecyclerViewCursorAdapter<CardAdapter.ViewHolde
             c.moveToPosition(pos);
             Bundle b = new Bundle();
 
-            b.putString("ALBUM_ID", c.getString(c.getColumnIndex(MediaStore.Audio.Albums._ID)));
+            b.putBoolean("ID_SPECIFIC", true);
+            if(CALLING_TAB.compareTo("ALBUMS") == 0)
+                b.putString("ALBUM_ID", c.getString(c.getColumnIndex(MediaStore.Audio.Albums._ID)));
+
+            else if(CALLING_TAB.compareTo("ARTISTS") == 0)
+                b.putString("ARTIST_ID", c.getString(c.getColumnIndex(MediaStore.Audio.Artists._ID)));
+
             All_Songs all_songs = new All_Songs();
             all_songs.setArguments(b);
 
@@ -57,7 +66,6 @@ public class CardAdapter extends RecyclerViewCursorAdapter<CardAdapter.ViewHolde
             ft.addToBackStack(null);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.replace(R.id.fragment_container, all_songs);
-//            c.close();
             ft.commit();
         }
     }
@@ -71,10 +79,18 @@ public class CardAdapter extends RecyclerViewCursorAdapter<CardAdapter.ViewHolde
     protected void onBindViewHolder(CardAdapter.ViewHolder holder, Cursor cursor) {
         if (cursor.getPosition() == -1) cursor.moveToFirst();
         else if (cursor.getPosition() < cursor.getCount()) {
-            holder.title.setText(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)));
-            holder.number.setText(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS)));
-            holder.number.append(" Songs");
-            new ImageLoader(holder.thumbnail, cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART))).execute();
+            if(CALLING_TAB.compareTo("ALBUMS") == 0) {
+                holder.title.setText(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)));
+                holder.number.setText(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS)));
+                holder.number.append(" Songs");
+                new ImageLoader(holder.thumbnail, cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART))).execute();
+            }
+            else if(CALLING_TAB.compareTo("ARTISTS") == 0) {
+                holder.title.setText(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST)));
+                holder.number.setText(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_TRACKS)));
+                holder.number.append(" Songs");
+                holder.thumbnail.setImageResource(R.drawable.default_artist);
+            }
         }
     }
 }

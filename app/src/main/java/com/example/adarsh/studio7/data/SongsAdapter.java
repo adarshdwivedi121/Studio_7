@@ -28,7 +28,7 @@ class SongsAdapter extends RecyclerViewCursorAdapter<SongsAdapter.ViewHolder> {
 
     private Activity activity;
     private boolean state;
-    private String id;
+    private String id, list_id;
     private boolean listenerOption;
 
     public SongsAdapter(Activity activity, Cursor cursor) {
@@ -36,9 +36,10 @@ class SongsAdapter extends RecyclerViewCursorAdapter<SongsAdapter.ViewHolder> {
         this.activity = activity;
     }
 
-    public void setState(boolean st, String id){
+    public void setState(boolean st, String id, String list_id){
         this.state = st;
         this.id = id;
+        this.list_id = list_id;
     }
 
     public void setListenerOption(boolean option){
@@ -93,7 +94,10 @@ class SongsAdapter extends RecyclerViewCursorAdapter<SongsAdapter.ViewHolder> {
             if(!listenerOption) {
                 Intent intent = new Intent(activity.getApplicationContext(), PlayScreen.class);
                 intent.putExtra("NEW_SONG", true);
-                if (state) intent.putExtra("ID", id);
+                if (state){
+                    intent.putExtra("ID", id);
+                    intent.putExtra("LIST_ID", list_id);
+                }
                 else intent.putExtra("ID", "all");
                 intent.putExtra("SONG_ID", c.getString(0));
                 intent.putExtra("POS", pos);

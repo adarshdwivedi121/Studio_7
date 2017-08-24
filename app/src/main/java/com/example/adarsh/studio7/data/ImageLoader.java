@@ -1,6 +1,7 @@
 package com.example.adarsh.studio7.data;
 
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;

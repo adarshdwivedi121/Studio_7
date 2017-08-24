@@ -31,7 +31,10 @@ public class PlayScreen extends AppCompatActivity {
         new PlayerControl(this, PlayerControl.SCREEN_PLAY);
 
         if(getIntent().hasExtra("NEW_SONG")) {
-            PlayerControl.updateSongList(getIntent().getStringExtra("ID"));
+            if(getIntent().getStringExtra("ID").compareTo("all") == 0)
+                PlayerControl.updateSongList(getIntent().getStringExtra("ID"), null);
+            else
+                PlayerControl.updateSongList(getIntent().getStringExtra("ID"), getIntent().getStringExtra("LIST_ID"));
             PlayerControl.setPos(getIntent().getIntExtra("POS", -1), getIntent().getStringExtra("SONG_ID"));
         }
 
@@ -61,6 +64,12 @@ public class PlayScreen extends AppCompatActivity {
                 repeat.setImageResource(R.drawable.ic_repeat_one);
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PlayerControl.updateScreen();
     }
 
     private class onClickListener implements View.OnClickListener{

@@ -18,14 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.adarsh.studio7.*;
+import com.example.adarsh.studio7.R;
 
 /**
- * Created by adarsh on 31/05/2017.
+ * Created by adarsh on 22/08/2017.
  */
 
-public class All_Albums extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
-
+public class All_Artists extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private CardAdapter cursorAdapter;
 
     @Nullable
@@ -33,8 +32,8 @@ public class All_Albums extends Fragment implements LoaderManager.LoaderCallback
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         View v = inflater.inflate(R.layout.fragment_all_cards, container, false);
-        Log.i("All Albums", "Starting song list fragment");
-        cursorAdapter = new CardAdapter(getActivity(), null, "ALBUMS");
+        Log.i("All Artists", "Starting song list fragment");
+        cursorAdapter = new CardAdapter(getActivity(), null, "ARTISTS");
         RecyclerView recyclerView = (RecyclerView)v.findViewById(R.id.all_cards);
         recyclerView.setLayoutManager(new GridLayoutManager(this.getActivity().getApplicationContext(), 2));
         recyclerView.setAdapter(cursorAdapter);
@@ -53,18 +52,17 @@ public class All_Albums extends Fragment implements LoaderManager.LoaderCallback
         Log.i("All Songs", "Inside Loader");
 
         String[] projection = {
-                MediaStore.Audio.Albums._ID,
-                MediaStore.Audio.Albums.ALBUM,
-                MediaStore.Audio.Albums.ALBUM_ART,
-                MediaStore.Audio.Albums.NUMBER_OF_SONGS
+                MediaStore.Audio.Artists._ID,
+                MediaStore.Audio.Artists.ARTIST,
+                MediaStore.Audio.Artists.NUMBER_OF_TRACKS
         };
 
         return new CursorLoader(this.getActivity().getApplicationContext(),
-                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
                 projection,
-                MediaStore.Audio.Albums.ALBUM + " NOT LIKE 'WhatsApp' COLLATE NOCASE",
+                MediaStore.Audio.Artists.ARTIST + " NOT LIKE 'WhatsApp' COLLATE NOCASE",
                 null,
-                MediaStore.Audio.Albums.ALBUM);
+                MediaStore.Audio.Artists.ARTIST);
     }
 
     @Override
@@ -74,7 +72,7 @@ public class All_Albums extends Fragment implements LoaderManager.LoaderCallback
         if (data != null && data.getCount() > 0) {
             getActivity().findViewById(R.id.empty_view).setVisibility(View.GONE);
             getActivity().findViewById(R.id.non_empty_view).setVisibility(View.VISIBLE);
-            Log.i("All Albums", "Albums : " + String.valueOf(data.getCount()));
+            Log.i("All Artists", "Artists: " + String.valueOf(data.getCount()));
             cursorAdapter.swapCursor(data);
         }
 

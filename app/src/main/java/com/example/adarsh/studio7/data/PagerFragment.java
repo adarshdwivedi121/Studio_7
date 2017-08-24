@@ -21,7 +21,7 @@ import com.example.adarsh.studio7.R;
 
 public class PagerFragment extends Fragment implements ActionBar.TabListener {
     private ViewPager viewPager;
-    private String[] tabs = {"Songs", "Albums"};
+    private String[] tabs = {"Songs", "Albums", "Artist", "Playlist"};
 
     @Nullable
     @Override
@@ -79,22 +79,30 @@ class ViewPagerAdapter extends FragmentPagerAdapter {
                 return new All_Songs();
             case 1:
                 return  new All_Albums();
+            case 2:
+                return new All_Artists();
+//            case 3:
+//                return new All_Playlists();
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
     public CharSequence getPageTitle(int position)
     {
-        if (position==0)
-            return "Songs";
-        else if (position==1)
-            return "Albums";
+        switch (position) {
+            case 0:
+                return "Songs";
+            case 1:
+                return "Albums";
+            case 2:
+                return "Artists";
+        }
         return super.getPageTitle(position);
     }
 }

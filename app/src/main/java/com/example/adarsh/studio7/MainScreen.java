@@ -43,6 +43,8 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
     private static NotificationReceiver notificationReceiver;
     private SharedPreferences pref;
 
+    private HeadsetReceiver headsetReceiver;
+
     private static NotificationManager notificationManager;
 
     protected boolean shouldAskPermissions() {
@@ -62,24 +64,34 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
     @Override
     protected void onStop() {
         super.onStop();
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putInt("Pos", PlayerControl.getPos());
         Cursor c = PlayerControl.getSongList();
-        ArrayList<String> list = new ArrayList<>();
-        for(int i=0; i<c.getCount(); i++) {
-            c.moveToPosition(i);
-            list.add(c.getString(0));
-        }
+        if(c!=null) {
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putInt("Pos", PlayerControl.getPos());
+            ArrayList<String> list = new ArrayList<>();
+            for (int i = 0; i < c.getCount(); i++) {
+                c.moveToPosition(i);
+                list.add(c.getString(0));
+            }
 
-        String data = list.toString();
-        data = (data.replace('[', '(')).replace(']', ')');
-        editor.putString("Prev_List", data);
-        editor.apply();
+            String data = list.toString();
+            data = (data.replace('[', '(')).replace(']', ')');
+            editor.putString("Prev_List", data);
+            editor.apply();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(getFragmentManager().getBackStackEntryCount() == 0) moveTaskToBack(true);
+        else    super.onBackPressed();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(headsetReceiver);
+        notificationManager.cancelAll();
     }
 
     public static void requestAudioFocus(){
@@ -117,7 +129,7 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
 
         Log.i("FOCUS", String.valueOf(focus));
 
-        HeadsetReceiver headsetReceiver = new HeadsetReceiver();
+        headsetReceiver = new HeadsetReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         registerReceiver(headsetReceiver, intentFilter);
@@ -160,7 +172,8 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
 
     public static void setUpNotification(Context context){
         RemoteViews view = new RemoteViews(context.getPackageName(), R.layout.notification_player);
-        view = PlayerControl.setUpNotification(view);
+        RemoteViews bigView = new RemoteViews(context.getPackageName(), R.layout.notification_player_large);
+        PlayerControl.setUpNotification(view, bigView);
 
         Intent intent = new Intent(context, PlayScreen.class);
 
@@ -181,13 +194,19 @@ public class MainScreen extends AppCompatActivity implements View.OnClickListene
         view.setOnClickPendingIntent(R.id.notification_play_pause_button, play_pause);
         view.setOnClickPendingIntent(R.id.notification_next_button, next);
 
+        bigView.setOnClickPendingIntent(R.id.large_notification_previous_button, previous);
+        bigView.setOnClickPendingIntent(R.id.large_notification_play_pause_button, play_pause);
+        bigView.setOnClickPendingIntent(R.id.large_notification_next_button, next);
+
         NotificationCompat.Builder notification = new NotificationCompat.Builder(context).
+                setCustomBigContentView(bigView).
                 setContent(view).
                 setContentIntent(pIntent).
                 setSmallIcon(R.mipmap.ic_launcher_circle).
                 setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher)).
                 setOngoing(true).
                 setPriority(Notification.PRIORITY_MAX).
+                setVisibility(NotificationCompat.VISIBILITY_PUBLIC).
                 setAutoCancel(false);
 
         notificationManager.notify(1001, notification.build());

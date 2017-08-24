@@ -39,7 +39,8 @@ public class PlayerControl{
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.ALBUM,
-            MediaStore.Audio.Media.DATA
+            MediaStore.Audio.Media.DATA,
+            MediaStore.Audio.Media.ARTIST_ID
     };
 
     private static MediaPlayer mediaPlayer = null;
@@ -102,20 +103,27 @@ public class PlayerControl{
         return !(mediaPlayer == null || !mediaPlayer.isPlaying());
     }
 
-    public static void updateSongList(String Query){
+    public static void updateSongList(String Query, String id){
         Cursor c = null;
-        if (Query.compareTo("all") == 0)
+        if (id ==null)
             c = parentActivity.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     PlayerControl.projection,
                     MediaStore.Audio.Media.TITLE + " NOT LIKE 'AUD%' AND " + MediaStore.Audio.Media.DURATION + ">=60000 COLLATE NOCASE",
                     null,
                     MediaStore.Audio.Media.TITLE);
-        else
+        else if(id.compareTo("ALBUM") == 0)
             c = parentActivity.getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     PlayerControl.projection,
                     "album_id IS " + Query,
+                    null,
+                    null);
+        else if(id.compareTo("ARTIST") == 0)
+            c = parentActivity.getContentResolver().query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    PlayerControl.projection,
+                    "artist_id IS " + Query,
                     null,
                     null);
         if(songList != null && !songList.isClosed())    songList.close();
@@ -346,15 +354,23 @@ public class PlayerControl{
         }
     }
 
-    public static RemoteViews setUpNotification(RemoteViews view) {
+    public static void setUpNotification(RemoteViews view, RemoteViews bigView) {
         view.setImageViewBitmap(R.id.notification_album_art, albumArt);
         view.setTextViewText(R.id.notification_song_title, songName);
-        if(isPlaying())
-            view.setImageViewResource(R.id.notification_play_pause_button, R.drawable.ic_pause);
-        else
-            view.setImageViewResource(R.id.notification_play_pause_button, R.drawable.ic_play);
 
-        return view;
+        bigView.setImageViewBitmap(R.id.large_notification_album_art, albumArt);
+        bigView.setTextViewText(R.id.large_notification_title, songName);
+        bigView.setTextViewText(R.id.large_notification_artist, artistName);
+        bigView.setTextViewText(R.id.large_notification_album, albumName);
+
+        if(isPlaying()) {
+            view.setImageViewResource(R.id.notification_play_pause_button, R.drawable.ic_pause);
+            bigView.setImageViewResource(R.id.large_notification_play_pause_button, R.drawable.ic_pause);
+        }
+        else {
+            view.setImageViewResource(R.id.notification_play_pause_button, R.drawable.ic_play);
+            bigView.setImageViewResource(R.id.large_notification_play_pause_button, R.drawable.ic_play);
+        }
     }
 
     public static void playSong(String id) {

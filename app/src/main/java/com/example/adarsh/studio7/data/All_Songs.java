@@ -43,7 +43,7 @@ public class All_Songs extends android.app.Fragment implements LoaderManager.Loa
         recyclerView.setAdapter(cursorAdapter);
         recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(16));
 
-        if (getArguments() != null && getArguments().containsKey("ALBUM_ID"))
+        if (getArguments() != null && getArguments().containsKey("ID_SPECIFIC"))
             getLoaderManager().initLoader(1001, getArguments(), this).forceLoad();
         else
             getLoaderManager().initLoader(1001, null, this).forceLoad();
@@ -62,12 +62,23 @@ public class All_Songs extends android.app.Fragment implements LoaderManager.Loa
 
         if (getArguments()!= null && getArguments().containsKey("ALBUM_ID")) {
             getActivity().getActionBar().hide();
-            cursorAdapter.setState(true, getArguments().getString("ALBUM_ID"));
+            cursorAdapter.setState(true, getArguments().getString("ALBUM_ID"), "ALBUM");
             return new CursorLoader(
                     this.getActivity().getApplicationContext(),
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     projection,
                     "album_id IS " + getArguments().getString("ALBUM_ID"),
+                    null,
+                    null);
+        }
+        else if (getArguments()!= null && getArguments().containsKey("ARTIST_ID")) {
+            getActivity().getActionBar().hide();
+            cursorAdapter.setState(true, getArguments().getString("ARTIST_ID"), "ARTIST");
+            return new CursorLoader(
+                    this.getActivity().getApplicationContext(),
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    "artist_id IS " + getArguments().getString("ARTIST_ID"),
                     null,
                     null);
         }
